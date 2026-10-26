@@ -1,0 +1,24 @@
+# Build artifacts (Docker builds these inside containers)
+frontend/node_modules/
+frontend/dist/
+backend/target/
+ai-service/.venv/
+ai-service/__pycache__/
+ai-service/**/__pycache__/
+*.pyc
+
+# Env (keep .env.example, exclude actual .env)
+.env
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+.cursor/

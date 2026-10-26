@@ -1,0 +1,102 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: aes-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-answer_eval}
+      POSTGRES_USER: ${POSTGRES_USER:-aes_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aes_password}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./database/migrate.sql:/docker-entrypoint-initdb.d/02-migrate.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aes_user} -d ${POSTGRES_DB:-answer_eval}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  db-migrate:
+    image: postgres:16-alpine
+    container_name: aes-db-migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:-aes_password}
+    volumes:
+      - ./database/migrate.sql:/migrate.sql:ro
+    entrypoint:
+      - sh
+      - -c
+      - psql -h postgres -U ${POSTGRES_USER:-aes_user} -d ${POSTGRES_DB:-answer_eval} -v ON_ERROR_STOP=1 -f /migrate.sql
+    restart: "no"
+
+  ai-service:
+    build: ./ai-service
+    container_name: aes-ai-service
+    restart: unless-stopped
+    environment:
+      AES_ENV: production
+    ports:
+      - "8001:8001"
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    container_name: aes-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      db-migrate:
+        condition: service_completed_successfully
+      ai-service:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-answer_eval}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-aes_user}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-aes_password}
+      AI_SERVICE_URL: http://ai-service:8001
+      JWT_SECRET: ${JWT_SECRET:-dev-only-change-me-in-production-0123456789abcdef0123456789abcdef}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost}
+      UPLOAD_DIR: /data/uploads
+    volumes:
+      - uploads:/data/uploads
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080}
+    container_name: aes-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+  uploads:

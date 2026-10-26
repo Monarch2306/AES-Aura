@@ -1,0 +1,15 @@
+{
+  "studentAnswer": "Photosynthesis uses chlorophyll. Carbon dioxide and water produce glucose and oxygen.",
+  "ocrConfidence": 80,
+  "segmentationConfidence": 80,
+  "rubric": {
+    "questionNumber": 1,
+    "maxMarks": 10,
+    "referenceAnswer": "Photosynthesis converts light energy using chlorophyll. Carbon dioxide and water produce glucose and oxygen.",
+    "concepts": [
+      {"concept": "chlorophyll", "weight": 1, "required": true, "negative": false},
+      {"concept": "glucose", "weight": 1, "required": true, "negative": false}
+    ],
+    "minRequiredConcepts": 1
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "_disclaimer": "This is a SMALL, HAND-CONSTRUCTED SYNTHETIC dataset for demonstrating the research evaluation methodology end-to-end. It is NOT a validated real-world accuracy benchmark. Replace with real, teacher-marked student answers (see DATASET section of README) before citing any accuracy figure produced from this file.",
+  "questions": [
+    {
+      "questionId": "Q1",
+      "questionText": "Explain photosynthesis.",
+      "maxMarks": 10,
+      "referenceAnswer": "Photosynthesis is the process by which green plants use sunlight, chlorophyll, water and carbon dioxide to produce glucose and release oxygen.",
+      "concepts": [
+        {"concept": "sunlight", "weight": 1.5, "required": true},
+        {"concept": "chlorophyll", "weight": 1.5, "required": true},
+        {"concept": "carbon dioxide", "weight": 1.5, "required": true},
+        {"concept": "water", "weight": 1.0, "required": true},
+        {"concept": "glucose", "weight": 1.5, "required": true},
+        {"concept": "oxygen", "weight": 1.5, "required": true}
+      ],
+      "minRequiredConcepts": 4,
+      "samples": [
+        {"studentAnswer": "Plants use sunlight and chlorophyll to absorb water and carbon dioxide, producing glucose and releasing oxygen.", "teacherMarks": 10},
+        {"studentAnswer": "Photosynthesis happens in leaves. Plants use sunlight and water to make food and release oxygen.", "teacherMarks": 6},
+        {"studentAnswer": "Plants make food using sunlight.", "teacherMarks": 3},
+        {"studentAnswer": "Photosynthesis does not need sunlight, only water is required.", "teacherMarks": 1},
+        {"studentAnswer": "I don't know the answer to this question.", "teacherMarks": 0},
+        {"studentAnswer": "Chlorophyll in the leaves absorbs carbon dioxide and water, and using sunlight energy converts them into glucose while releasing oxygen gas.", "teacherMarks": 10},
+        {"studentAnswer": "Plants breathe in oxygen and release carbon dioxide like humans.", "teacherMarks": 1}
+      ]
+    },
+    {
+      "questionId": "Q2",
+      "questionText": "What is Newton's second law of motion?",
+      "maxMarks": 8,
+      "referenceAnswer": "Newton's second law states that force equals mass times acceleration, F=ma, meaning the acceleration of an object depends on the net force acting on it and its mass.",
+      "concepts": [
+        {"concept": "force", "weight": 1.5, "required": true},
+        {"concept": "mass", "weight": 1.5, "required": true},
+        {"concept": "acceleration", "weight": 1.5, "required": true},
+        {"concept": "net force", "weight": 1.0, "required": false}
+      ],
+      "minRequiredConcepts": 2,
+      "samples": [
+        {"studentAnswer": "Newton's second law says force equals mass multiplied by acceleration, F=ma.", "teacherMarks": 8},
+        {"studentAnswer": "The net force on an object equals its mass times its acceleration.", "teacherMarks": 8},
+        {"studentAnswer": "Force is mass times acceleration but I'm not sure how they relate.", "teacherMarks": 5},
+        {"studentAnswer": "Objects in motion stay in motion unless acted on by a force.", "teacherMarks": 1},
+        {"studentAnswer": "Acceleration increases when mass decreases for the same force.", "teacherMarks": 4},
+        {"studentAnswer": "F=ma", "teacherMarks": 4}
+      ]
+    }
+  ]
+}
